@@ -1,0 +1,28 @@
+
+body * {
+  color: white;
+}
+
+caption {
+  color: white;
+}
+
+td, th {
+  border: 1px solid white;
+  color: white;
+}
+
+
+.navbar-dark .navbar-nav .nav-link{
+  color: white;
+}
+
+.showcase-img {
+  filter: invert(1);
+}
+.img-fluid {
+  filter: invert(1);
+}
+
+
+
