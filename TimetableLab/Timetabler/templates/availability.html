@@ -1,0 +1,42 @@
+{% extends "base_template.html" %}
+{% load widget_tweaks %}
+{% load mathfilters %}
+
+{% block content %}
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <table>
+        <tr>
+            <th>Period</th>
+            <th>Monday</th>
+            <th>Tuesday</th>
+            <th>Wednesday</th>
+            <th>Thursday</th>
+            <th>Friday</th>
+        </tr>
+        
+    {% for form in formset.forms %}
+    {% if forloop.first %}
+    <tr><td>1</td>
+    {% elif forloop.counter == 6 or forloop.counter == 11 or forloop.counter == 16 or forloop.counter == 21 %}
+    </tr>
+    <tr>
+        <td>
+            {% with count=forloop.counter|intdiv:5 %}
+                 {{count|add:1}}
+            {% endwith %}
+        </td>
+    {% endif %}
+    <td>{{form.day}}
+    </td>
+    {% if forloop.last %}
+    </tr>
+    {% endif %}
+    {% endfor %}
+    </table>
+    {{ formset.management_form }}
+    <input type="submit" value="Submit">
+</form>
+
+{% endblock %}
