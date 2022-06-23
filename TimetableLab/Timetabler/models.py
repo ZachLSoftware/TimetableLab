@@ -11,6 +11,5 @@ class Teacher(RandomIDModel):
     name = models.CharField(max_length=50)
 
 class Availability(models.Model):
-    start = models.IntegerField()
-    end = models.IntegerField()
+    period = models.CharField(max_length=20)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
