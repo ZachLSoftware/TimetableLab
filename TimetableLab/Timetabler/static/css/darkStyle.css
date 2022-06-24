@@ -3,6 +3,10 @@ body * {
   color: white;
 }
 
+input {
+  color: black;
+}
+
 caption {
   color: white;
 }

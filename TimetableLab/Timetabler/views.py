@@ -32,7 +32,7 @@ def addTeacher(request, id=None):
 
 def setAvailability(request, teacherid):
     context={}
-    context['teacher']=teacherid
+    context['teacher']=Teacher.objects.get(id=teacherid)
     periods=['mon-1', 'tues-1', 'wed-1', 'thurs-1', 'fri-1', 
                      'mon-2', 'tues-2', 'wed-2', 'thurs-2', 'fri-2',
                      'mon-3', 'tues-3', 'wed-3', 'thurs-3', 'fri-3',

@@ -1,50 +1,51 @@
 {% extends "base_template.html" %}
 {% load widget_tweaks %}
 {% load mathfilters %}
+{% block js %}
+{% load static %}
+    <script>let list = {{current|safe}}</script>
+    <script type="text/javascript" src="{% static 'javascript/availability.js' %}" defer></script>
+{% endblock %}
 
 {% block content %}
 
-<form method="POST" action="{% url 'availability' teacher %}" enctype="multipart/form-data">
+<h1>{{teacher.name}} availability </h1>
+<button id="selectAll" type="button" class="btn btn-primary">Select All</button>
+<button id="clearSelect" type="button" class="btn btn-primary">Clear Selection</button>
+<form method="POST" action="{% url 'availability' teacher.id %}" enctype="multipart/form-data">
     {% csrf_token %}
-    <table>
-        <tr>
-            <th>Period</th>
-            <th>Monday</th>
-            <th>Tuesday</th>
-            <th>Wednesday</th>
-            <th>Thursday</th>
-            <th>Friday</th>
-        </tr>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Period</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+            </tr>
+        </thead>
         
     {% for form in formset.forms %}
     {% if forloop.first %}
-    <tr><td>1</td>
+    <tr><th scope="row">1</th>
     {% elif forloop.counter == 6 or forloop.counter == 11 or forloop.counter == 16 or forloop.counter == 21 %}
     </tr>
     <tr>
-        <td>
+        <th scope="row">
             {% with count=forloop.counter|intdiv:5 %}
                  {{count|add:1}}
             {% endwith %}
-        </td>
+        </th>
     {% endif %}
-    <td>{% render_field form.period id=forloop.counter %}
-    </td>
+    <td id="cell-{{forloop.counter}}" class="table-cell"><label>{% render_field form.period id=forloop.counter class="form-check-input" %}
+    </label></td>
     {% if forloop.last %}
     </tr>
     {% endif %}
     {% endfor %}
     </table>
     {{ formset.management_form }}
-    <input type="submit" value="Submit">
+    <input type="submit" class="btn btn-primary" value="Submit">
 </form>
-<script>
-    let list = {{current|safe}}  
-    console.log(list)
-    for (const period of list){
-        let id='#'+period
-        console.log(id)
-        $(id).prop('checked', true);
-    }
-</script>
 {% endblock %}

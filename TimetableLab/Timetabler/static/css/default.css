@@ -53,3 +53,12 @@
   .errorlist{
     color:red;
   }
+
+  td, th {
+    text-align: center;
+  }
+
+  td label { 
+    display: block;
+    text-align: center;
+ }
