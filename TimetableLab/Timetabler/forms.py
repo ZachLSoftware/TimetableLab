@@ -15,5 +15,5 @@ class TeacherForm(forms.ModelForm):
         self.fields['id'].required=False
     class Meta:
         model = Teacher
-        fields = ('name', 'id',)
+        fields = ('name', 'totalHours', 'id',)
         widgets = {'id': forms.HiddenInput()}

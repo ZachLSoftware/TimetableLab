@@ -28,7 +28,7 @@
             {% endwith %}
         </td>
     {% endif %}
-    <td>{{form.period}}
+    <td>{% render_field form.period id=forloop.counter %}
     </td>
     {% if forloop.last %}
     </tr>
@@ -38,5 +38,13 @@
     {{ formset.management_form }}
     <input type="submit" value="Submit">
 </form>
-
+<script>
+    let list = {{current|safe}}  
+    console.log(list)
+    for (const period of list){
+        let id='#'+period
+        console.log(id)
+        $(id).prop('checked', true);
+    }
+</script>
 {% endblock %}

@@ -9,6 +9,7 @@ import uuid
 
 class Teacher(RandomIDModel):
     name = models.CharField(max_length=50)
+    totalHours = models.IntegerField()
 
 class Availability(models.Model):
     period = models.CharField(max_length=20)
