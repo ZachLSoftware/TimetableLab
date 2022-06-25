@@ -7,6 +7,9 @@ from django.forms import modelformset_factory
 from Timetabler.models import Availability
 from Timetabler.models import Teacher
 from Timetabler.forms import *
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib import messages
+from django.contrib.auth import authenticate, login
 
 def index(request):
     return render(request, "index.html")
@@ -64,3 +67,24 @@ def setAvailability(request, teacherid):
     context['current']=current
     context['formset']=formset
     return render(request, 'availability.html', context)
+
+def register(request):
+    context={}
+    
+    if request.method == "POST":
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f"{username}'s account was created.")
+            new_user= authenticate(username=form.cleaned_data['username'],
+                                    password=form.cleaned_data['password1'],
+                                    )
+            login(request,new_user)
+            return redirect('index')
+        else:
+            context["form"] = form
+    else:
+        form = RegistrationForm()
+        context['form']=form
+    return render(request, 'registration/register.html', context)

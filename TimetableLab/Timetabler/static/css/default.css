@@ -11,8 +11,11 @@
     padding: 5px 15px;
   }
   
-  
-  .content ul li h3{
+#passwordErrorList ul li {
+  color: #d9534f;
+}
+
+.content ul li h3{
   display: inline;
   border-bottom: double;
   margin-left: 1.5%;
