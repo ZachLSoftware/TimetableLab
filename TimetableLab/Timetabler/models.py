@@ -2,6 +2,8 @@ from django.db import models
 from django_random_id_model import RandomIDModel
 from django.contrib.auth.models import AbstractUser
 import uuid
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 
 class User(AbstractUser):
@@ -15,4 +17,3 @@ class Availability(models.Model):
     period = models.CharField(max_length=20)
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
 
-   

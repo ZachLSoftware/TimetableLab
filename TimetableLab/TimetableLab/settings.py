@@ -20,6 +20,9 @@ environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+#Test Email Confirmation and Reset
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
@@ -112,6 +115,8 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'index'
 
 
 # Internationalization

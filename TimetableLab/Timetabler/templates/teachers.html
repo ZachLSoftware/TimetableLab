@@ -2,7 +2,7 @@
 
 {% block content %}
 {% for teacher in teachers %}
-<p>{{teacher.name}} - <a href="{% url 'addTeacher' teacher.id %}">Edit Teacher Name</a> - <a href="{% url 'availability' teacher.id %}">Edit Teacher Availability</a></p>
+<p>{{teacher.name}} - <a href="{% url 'addTeacher' teacher.id %}">Edit Teacher Name or Hours</a> - <a href="{% url 'availability' teacher.id %}">Edit Teacher Availability</a></p>
 {% endfor %}
 <a class="nav-link" id="addTeacher" aria-current="page" href="{% url 'addTeacher' %}">Add a Teacher</a>
 {% endblock %}
