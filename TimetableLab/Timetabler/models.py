@@ -12,8 +12,10 @@ class User(AbstractUser):
 class Teacher(RandomIDModel):
     name = models.CharField(max_length=50)
     totalHours = models.IntegerField()
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Availability(models.Model):
     period = models.CharField(max_length=20)
+    week = models.IntegerField()
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
 

@@ -11,7 +11,7 @@ from Timetabler.forms import *
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from Timetabler.tokens import account_activation_token
 from django.template.loader import render_to_string
 from django.contrib.sites.shortcuts import get_current_site
@@ -25,7 +25,7 @@ def index(request):
 @login_required
 def teachers(request):
     context={}
-    teachers=Teacher.objects.all()
+    teachers=Teacher.objects.filter(user=request.user)
     context['teachers']=teachers
     return render(request, "teachers.html", context)
 
@@ -36,7 +36,9 @@ def addTeacher(request, id=None):
         teacher = None
     form = TeacherForm(request.POST or None, instance=teacher)
     if form.is_valid():
-        form.save()
+        new_teacher=form.save(commit=False)
+        new_teacher.user=request.user
+        new_teacher.save()
         return redirect('teachers')
     return render(request, 'addTeacher.html',{'form': form})
 
@@ -52,29 +54,51 @@ def setAvailability(request, teacherid):
                      'mon-5', 'tues-5', 'wed-5', 'thurs-5', 'fri-5']
     availabilityFormSet = formset_factory(AvailabilityForm, extra=25)
     if request.method=='POST':
-        formset = availabilityFormSet(request.POST)
-        if formset.is_valid():
+        formset1 = availabilityFormSet(request.POST, prefix='week1')
+        if formset1.is_valid():
             i=0
-            Availability.objects.filter(teacher=teacherid).delete()
-            for f in formset:
+            Availability.objects.filter(teacher=teacherid).filter(week=1).delete()
+            for f in formset1:
                 cd = f.cleaned_data
                 period = cd.get('period')
                 if(period):
                     newperiod=Availability()
                     newperiod.period=periods[i]
+                    newperiod.week=1
                     newperiod.teacher=Teacher.objects.get(id=teacherid)
                     newperiod.save()
                 i=i+1
-            return redirect(reverse('index'))
+        formset2 = availabilityFormSet(request.POST, prefix='week2')
+        if formset2.is_valid():
+            i=0
+            Availability.objects.filter(teacher=teacherid).filter(week=2).delete()
+            for f in formset2:
+                cd = f.cleaned_data
+                period = cd.get('period')
+                if(period):
+                    newperiod=Availability()
+                    newperiod.period=periods[i]
+                    newperiod.week=2
+                    newperiod.teacher=Teacher.objects.get(id=teacherid)
+                    newperiod.save()
+                i=i+1
+        return redirect(reverse('teachers'))
     else:
-        formset = availabilityFormSet()
+        formset1 = availabilityFormSet(prefix="week1")
+        formset2 = availabilityFormSet(prefix="week2")
     
-    currentQuery=Availability.objects.filter(teacher=teacherid)
+    currentQuery=Availability.objects.filter(teacher=teacherid).filter(week=1)
     current = []
     for c in currentQuery:
         current.append(periods.index(c.period)+1)
+    currentQuery=Availability.objects.filter(teacher=teacherid).filter(week=2)
+    for c in currentQuery:
+        current.append(periods.index(c.period)+26)
+    hours=Teacher.objects.values_list('totalHours', flat=True).get(id=teacherid)
+    context['hours']=hours
     context['current']=current
-    context['formset']=formset
+    context['formset1']=formset1
+    context['formset2']=formset2
     return render(request, 'availability.html', context)
 
 def register(request):
@@ -127,3 +151,9 @@ def activate(request, uidb64, token):
     else:
         messages.error(request, "Activation Link is Invalid")
         return redirect('index')
+
+
+def logout_view(request):
+    logout(request)
+    messages.success(request, "You have been logged out")
+    return redirect('index')

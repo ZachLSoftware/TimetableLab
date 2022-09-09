@@ -4,16 +4,18 @@
 {% block js %}
 {% load static %}
     <script>let list = {{current|safe}}</script>
+    <script>let totalHours = {{hours|safe}}</script>
     <script type="text/javascript" src="{% static 'javascript/availability.js' %}" defer></script>
 {% endblock %}
 
 {% block content %}
 
-<h1>{{teacher.name}} availability </h1>
+<h1>{{teacher.name}} Availability - Hours Remaining: <span id="totalHours"> {{ hours }}</span> </h1>
 <button id="selectAll" type="button" class="btn btn-primary">Select All</button>
 <button id="clearSelect" type="button" class="btn btn-primary">Clear Selection</button>
 <form method="POST" action="{% url 'availability' teacher.id %}" enctype="multipart/form-data">
     {% csrf_token %}
+    <h1>Week 1</h1>
     <table class="table">
         <thead>
             <tr>
@@ -26,7 +28,7 @@
             </tr>
         </thead>
         
-    {% for form in formset.forms %}
+    {% for form in formset1.forms %}
     {% if forloop.first %}
     <tr><th scope="row">1</th>
     {% elif forloop.counter == 6 or forloop.counter == 11 or forloop.counter == 16 or forloop.counter == 21 %}
@@ -45,7 +47,40 @@
     {% endif %}
     {% endfor %}
     </table>
-    {{ formset.management_form }}
+    {{ formset1.management_form }}
+    <h1>Week 2</h1>
+      <table class="table">
+        <thead>
+            <tr>
+                <th>Period</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+            </tr>
+        </thead>
+        
+    {% for form in formset2.forms %}
+    {% if forloop.first %}
+    <tr><th scope="row">1</th>
+    {% elif forloop.counter == 6 or forloop.counter == 11 or forloop.counter == 16 or forloop.counter == 21 %}
+    </tr>
+    <tr>
+        <th scope="row">
+            {% with count=forloop.counter|intdiv:5 %}
+                 {{count|add:1}}
+            {% endwith %}
+        </th>
+    {% endif %}
+    <td id="cell-{{forloop.counter|add:25}}" class="table-cell"><label>{% render_field form.period id=forloop.counter|add:25 class="form-check-input" %}
+    </label></td>
+    {% if forloop.last %}
+    </tr>
+    {% endif %}
+    {% endfor %}
+    </table>
+    {{ formset2.management_form }}
     <input type="submit" class="btn btn-primary" value="Submit">
 </form>
 {% endblock %}
