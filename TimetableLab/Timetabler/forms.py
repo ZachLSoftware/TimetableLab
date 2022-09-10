@@ -25,7 +25,8 @@ class RegistrationForm(UserCreationForm):
 class AvailabilityForm(forms.Form):
     period = forms.BooleanField()
 
-
+class ModuleForm(forms.Form):
+    moduleName = forms.CharField()
 
 class TeacherForm(forms.ModelForm):
 

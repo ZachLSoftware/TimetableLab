@@ -35,6 +35,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+LOGIN_REDIRECT_URL = "successPage"
+LOGOUT_REDIRECT_URL = "successPage"
 
 # Application definition
 

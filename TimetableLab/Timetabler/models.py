@@ -1,3 +1,4 @@
+from tkinter import CASCADE
 from django.db import models
 from django_random_id_model import RandomIDModel
 from django.contrib.auth.models import AbstractUser
@@ -18,4 +19,12 @@ class Availability(models.Model):
     period = models.CharField(max_length=20)
     week = models.IntegerField()
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+
+class Module(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=20)
+    week = models.IntegerField()
+    year = models.IntegerField()
+    period = models.CharField(max_length=20)
+
 

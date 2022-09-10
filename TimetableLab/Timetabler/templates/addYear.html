@@ -1,0 +1,9 @@
+{% extends "base_template.html" %}
+
+{% block content %}
+<form method="POST" action="{% url 'addYear' %}" enctype="multipart/form-data">
+{% csrf_token %}
+<input type="number" min="1900" max="2100" step="1" name="year"/>
+<input type="submit" class="btn btn-primary" value="Submit">
+</form>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends "base_template.html" %}
+
+{% block content %}
+{% for year in years %}
+<p>{{ year }} - <a href="{% url 'setModules' year %}"> add or edit modules </a></p>
+{% endfor %}
+<a class="nav-link" id="addYear" aria-current="page" href="{% url 'addYear' %}">Add a New Year</a>
+{% endblock %}

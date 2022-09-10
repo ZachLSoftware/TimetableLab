@@ -1,0 +1,85 @@
+
+{% extends "base_template.html" %}
+{% load widget_tweaks %}
+{% load mathfilters %}
+{% block js %}
+{% load static %}
+    <script>let modulePeriods = {{current|safe}}</script>
+    <script>let moduleNames = {{currentNames|safe}}</script>
+    <script type="text/javascript" src="{% static 'javascript/module.js' %}" defer></script>
+{% endblock %}
+
+{% block content %}
+
+<h1>Year {{year}} modules</h1>
+<form method="POST" action="{% url 'setModules' year %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <h1>Week 1</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Period</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+            </tr>
+        </thead>
+        
+    {% for form in formset1.forms %}
+    {% if forloop.first %}
+    <tr><th scope="row">1</th>
+    {% elif forloop.counter == 6 or forloop.counter == 11 or forloop.counter == 16 or forloop.counter == 21 %}
+    </tr>
+    <tr>
+        <th scope="row">
+            {% with count=forloop.counter|intdiv:5 %}
+                 {{count|add:1}}
+            {% endwith %}
+        </th>
+    {% endif %}
+    <td id="cell-{{forloop.counter}}" class="table-cell"><label>{% render_field form.moduleName id=forloop.counter class="form-control" %}
+    </label></td>
+    {% if forloop.last %}
+    </tr>
+    {% endif %}
+    {% endfor %}
+    </table>
+    {{ formset1.management_form }}
+    <h1>Week 2</h1>
+      <table class="table">
+        <thead>
+            <tr>
+                <th>Period</th>
+                <th>Monday</th>
+                <th>Tuesday</th>
+                <th>Wednesday</th>
+                <th>Thursday</th>
+                <th>Friday</th>
+            </tr>
+        </thead>
+        
+    {% for form in formset2.forms %}
+    {% if forloop.first %}
+    <tr><th scope="row">1</th>
+    {% elif forloop.counter == 6 or forloop.counter == 11 or forloop.counter == 16 or forloop.counter == 21 %}
+    </tr>
+    <tr>
+        <th scope="row">
+            {% with count=forloop.counter|intdiv:5 %}
+                 {{count|add:1}}
+            {% endwith %}
+        </th>
+    {% endif %}
+    <td id="cell-{{forloop.counter|add:25}}" class="table-cell"><label>{% render_field form.moduleName id=forloop.counter|add:25 class="form-control" %}
+    </label></td>
+    {% if forloop.last %}
+    </tr>
+    {% endif %}
+    {% endfor %}
+    </table>
+    {{ formset2.management_form }}
+    <input type="submit" class="btn btn-primary" value="Submit">
+</form>
+{% endblock %}

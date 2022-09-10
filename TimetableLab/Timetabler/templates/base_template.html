@@ -30,6 +30,25 @@
         <li class="nav-item">
             <a class="nav-link" id="Teachers" aria-current="page" href="{% url 'teachers' %}">Teachers</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" id="Modules" aria-current="page" href="{% url 'modules' %}">Modules</a>
+        </li>
+                <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Profile
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+
+              {% if user.is_authenticated %}
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" id="Logout" href="{% url 'logout' %}">Logout</a></li>
+              {% else %}
+                <li><a class="dropdown-item" id="Register" href="{% url 'register' %}">Register</a></li>
+                <li><a class="dropdown-item" id="Login" href="{% url 'login' %}">Login</a></li>
+              {% endif %}
+
+          </ul>
+        </li>
       </ul>
 
     </div>
@@ -37,6 +56,8 @@
 </nav>
 
         {% endblock %}
+{% block messages %}
+{% endblock %}
         
         <div class="container shadow">
             {% block content %}
