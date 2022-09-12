@@ -27,6 +27,11 @@ class AvailabilityForm(forms.Form):
 
 class ModuleForm(forms.Form):
     moduleName = forms.CharField()
+    modulePeriod = forms.CharField()
+    moduleWeek = forms.IntegerField()
+
+    class Meta:
+        widgets={'modulePeriod': forms.HiddenInput(), 'moduleWeek': forms.HiddenInput()}
 
 class TeacherForm(forms.ModelForm):
 

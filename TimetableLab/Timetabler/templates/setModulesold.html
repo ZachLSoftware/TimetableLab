@@ -2,14 +2,11 @@
 {% extends "base_template.html" %}
 {% load widget_tweaks %}
 {% load mathfilters %}
-{% load filters %}
 {% block js %}
 {% load static %}
-    <script>let currentModulePeriods = {{currentModulePeriods|safe}}</script>
-    <script>let currentModuleNames = {{currentModuleNames|safe}}</script>
-
-    <script>let periods = {{periods|safe}}</script>
-    <script type="text/javascript" src="{% static 'javascript/addModule.js' %}" defer></script>
+    <script>let modulePeriods = {{current|safe}}</script>
+    <script>let moduleNames = {{currentNames|safe}}</script>
+    <script type="text/javascript" src="{% static 'javascript/module.js' %}" defer></script>
 {% endblock %}
 
 {% block content %}
@@ -30,12 +27,9 @@
             </tr>
         </thead>
         
-    {% for i in 25|times %}
+    {% for form in formset1.forms %}
     {% if forloop.first %}
     <tr><th scope="row">1</th>
-    <td id="cell-{{forloop.counter}}" class="table-cell">
-    <button id="add-form-{{forloop.counter}}" type="button" class="btn btn-primary addFormButton">Add a Module</button>
-    </td>
     {% elif forloop.counter == 6 or forloop.counter == 11 or forloop.counter == 16 or forloop.counter == 21 %}
     </tr>
     <tr>
@@ -44,16 +38,15 @@
                  {{count|add:1}}
             {% endwith %}
         </th>
-     <td id="cell-{{forloop.counter}}" class="table-cell"><button id="add-form-{{forloop.counter}}" type="button" class="btn btn-primary addFormButton">Add a Module</button>
-    {% else %}
-    <td id="cell-{{forloop.counter}}" class="table-cell"><button id="add-form-{{forloop.counter}}" type="button" class="btn btn-primary addFormButton">Add a Module</button>
-</td>
     {% endif %}
+    <td id="cell-{{forloop.counter}}" class="table-cell"><label>{% render_field form.moduleName id=forloop.counter class="form-control" %}
+    </label></td>
     {% if forloop.last %}
     </tr>
     {% endif %}
     {% endfor %}
     </table>
+    {{ formset1.management_form }}
     <h1>Week 2</h1>
       <table class="table">
         <thead>
@@ -67,7 +60,7 @@
             </tr>
         </thead>
         
-    {% for i in 25|times %}
+    {% for form in formset2.forms %}
     {% if forloop.first %}
     <tr><th scope="row">1</th>
     {% elif forloop.counter == 6 or forloop.counter == 11 or forloop.counter == 16 or forloop.counter == 21 %}
@@ -79,15 +72,14 @@
             {% endwith %}
         </th>
     {% endif %}
-    <td id="cell-{{forloop.counter|add:25}}" class="table-cell">
-    <button id="add-form-{{forloop.counter|add:25}}" type="button" class="btn btn-primary addFormButton">Add a Module</button>
-    </td>
+    <td id="cell-{{forloop.counter|add:25}}" class="table-cell"><label>{% render_field form.moduleName id=forloop.counter|add:25 class="form-control" %}
+    </label></td>
     {% if forloop.last %}
     </tr>
     {% endif %}
     {% endfor %}
     </table>
+    {{ formset2.management_form }}
     <input type="submit" class="btn btn-primary" value="Submit">
-    {{formset.management_form}}
 </form>
 {% endblock %}

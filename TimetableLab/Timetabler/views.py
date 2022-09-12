@@ -80,7 +80,7 @@ def setAvailability(request, teacherid):
         formset1 = availabilityFormSet(request.POST, prefix='week1')
         if formset1.is_valid():
             i=0
-            Availability.objects.filter(user=request.user).filter(teacher=teacherid).filter(week=1).delete()
+            Availability.objects.filter(teacher=teacherid).filter(week=1).delete()
             for f in formset1:
                 cd = f.cleaned_data
                 period = cd.get('period')
@@ -94,7 +94,7 @@ def setAvailability(request, teacherid):
         formset2 = availabilityFormSet(request.POST, prefix='week2')
         if formset2.is_valid():
             i=0
-            Availability.objects.filter(user=request.user).filter(teacher=teacherid).filter(week=2).delete()
+            Availability.objects.filter(teacher=teacherid).filter(week=2).delete()
             for f in formset2:
                 cd = f.cleaned_data
                 period = cd.get('period')
@@ -125,6 +125,52 @@ def setAvailability(request, teacherid):
     return render(request, 'availability.html', context)
 
 def setModules(request, year=None):
+    moduleFormSet = formset_factory(ModuleForm)
+    context={}
+    periods=['mon-1', 'tues-1', 'wed-1', 'thurs-1', 'fri-1', 
+                     'mon-2', 'tues-2', 'wed-2', 'thurs-2', 'fri-2',
+                     'mon-3', 'tues-3', 'wed-3', 'thurs-3', 'fri-3',
+                     'mon-4', 'tues-4', 'wed-4', 'thurs-4', 'fri-4',
+                     'mon-5', 'tues-5', 'wed-5', 'thurs-5', 'fri-5']
+    moduleFormSet = formset_factory(ModuleForm)
+    if request.method=='POST':
+        moduleSet = moduleFormSet(request.POST)
+        if moduleSet.is_valid():
+            i=0
+            Module.objects.filter(user=request.user).filter(year=year).delete()
+            for f in moduleSet:
+                cd = f.cleaned_data
+                moduleName = cd.get('moduleName')
+                if(moduleName):
+                    newModule=Module()
+                    newModule.user=request.user
+                    newModule.name=moduleName
+                    newModule.period=cd.get('modulePeriod')
+                    newModule.week=cd.get('moduleWeek')
+                    newModule.year=year
+                    newModule.save()
+                i=i+1
+        return redirect('modules')
+    else:
+        formset = moduleFormSet()
+
+    currentModulesRaw = Module.objects.filter(user=request.user).filter(year=year).values_list('week', 'period', 'name')
+    currentModuleNames=[]
+    currentModulePeriods=[]
+    for mod in currentModulesRaw:
+        week=mod[0]-1
+        week=week*25
+        currentModulePeriods.append(periods.index(mod[1])+week+1)
+        currentModuleNames.append(mod[2])
+    context['currentModulePeriods']=currentModulePeriods
+    context['currentModuleNames']=currentModuleNames
+    context['year']=year
+    context['formset']=formset
+    context['periods']=periods
+
+    return render(request, 'setModules.html', context)
+
+def setModulesold(request, year=None):
     context={}
     periods=['mon-1', 'tues-1', 'wed-1', 'thurs-1', 'fri-1', 
                      'mon-2', 'tues-2', 'wed-2', 'thurs-2', 'fri-2',
@@ -186,7 +232,7 @@ def setModules(request, year=None):
     context['year']=year
     context['formset1']=formset1
     context['formset2']=formset2
-    return render(request, 'setModules.html', context)
+    return render(request, 'setModules2.html', context)
 
 def register(request):
     context={}
