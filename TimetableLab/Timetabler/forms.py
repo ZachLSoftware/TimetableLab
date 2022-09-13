@@ -3,6 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Teacher, User
 from django.contrib.auth import get_user_model
 from django.forms import ValidationError
+import re
 
 class RegistrationForm(UserCreationForm):
     #username = forms.CharField(label='username', min_length=5, max_length=30)
@@ -32,6 +33,17 @@ class ModuleForm(forms.Form):
 
     class Meta:
         widgets={'modulePeriod': forms.HiddenInput(), 'moduleWeek': forms.HiddenInput()}
+
+    def clean(self):
+        super(ModuleForm, self).clean()
+        
+        name=self.cleaned_data.get('moduleName')
+
+        if not (re.match('^\d+\D+\d+', name)):
+            self._errors['moduleName'] = self.error_class([
+                'Module must follow the format 10x5'
+            ])
+        return self.cleaned_data
 
 class TeacherForm(forms.ModelForm):
 

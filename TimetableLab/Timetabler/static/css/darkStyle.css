@@ -11,9 +11,15 @@ caption {
   color: white;
 }
 
+
 td, th {
   border: 1px solid white;
   color: white;
+}
+
+
+#modTable td {
+  width: 20%;
 }
 
 .navbar-brand{

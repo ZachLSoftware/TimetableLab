@@ -7,18 +7,21 @@
 {% load static %}
     <script>let currentModulePeriods = {{currentModulePeriods|safe}}</script>
     <script>let currentModuleNames = {{currentModuleNames|safe}}</script>
-
+    <script>let errors = {{errors|safe}}</script>
     <script>let periods = {{periods|safe}}</script>
     <script type="text/javascript" src="{% static 'javascript/addModule.js' %}" defer></script>
 {% endblock %}
 
+{% block container-override %}
+<div class="container-fluid">
+{% endblock %}
 {% block content %}
 
 <h1>Year {{year}} modules</h1>
 <form method="POST" action="{% url 'setModules' year %}" enctype="multipart/form-data">
     {% csrf_token %}
     <h1>Week 1</h1>
-    <table class="table">
+    <table class="table" id="modTable">
         <thead>
             <tr>
                 <th>Period</th>
@@ -87,7 +90,7 @@
     {% endif %}
     {% endfor %}
     </table>
-    <input type="submit" class="btn btn-primary" value="Submit">
+    <input id="sbmBtn" type="submit" class="btn btn-primary" value="Submit">
     {{formset.management_form}}
 </form>
 {% endblock %}

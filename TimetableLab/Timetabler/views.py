@@ -150,18 +150,42 @@ def setModules(request, year=None):
                     newModule.year=year
                     newModule.save()
                 i=i+1
-        return redirect('modules')
+            return redirect('modules')
+        else:
+            currentModuleNames=[]
+            currentModulePeriods=[]
+            errors=[]
+            for f in moduleSet:
+                if f.errors:
+                    errors.append(f.errors['moduleName'].as_data()[0].messages[0])
+                else:
+                    errors.append("None")    
+                cd=f.cleaned_data
+                currentModuleNames.append(cd.get('moduleName'))
+                week=cd.get('moduleWeek')-1
+                week=week*25
+                currentModulePeriods.append(periods.index(cd.get('modulePeriod'))+week+1)
+            context['errors']=errors
+            context['currentModulePeriods']=currentModulePeriods
+            context['currentModuleNames']=currentModuleNames
+            context['year']=year
+            context['formset']=moduleSet
+            context['periods']=periods
+            return render(request, 'setModules.html', context)
     else:
         formset = moduleFormSet()
 
     currentModulesRaw = Module.objects.filter(user=request.user).filter(year=year).values_list('week', 'period', 'name')
     currentModuleNames=[]
     currentModulePeriods=[]
+    errors=[]
     for mod in currentModulesRaw:
         week=mod[0]-1
         week=week*25
         currentModulePeriods.append(periods.index(mod[1])+week+1)
         currentModuleNames.append(mod[2])
+        errors.append("None")
+    context['errors']=errors
     context['currentModulePeriods']=currentModulePeriods
     context['currentModuleNames']=currentModuleNames
     context['year']=year
