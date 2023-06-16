@@ -1,0 +1,13 @@
+{% extends "base_template.html" %}
+
+{% block content %}
+
+  <div class="d-flex justify-content-center">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn btn-primary mb-3" type="submit">Submit</button>
+    </form>
+  </div>
+
+{% endblock %}

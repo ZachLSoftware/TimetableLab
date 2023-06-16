@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from .models import Teacher, User
+from .models import Constraint, Teacher, User
 from django.contrib.auth import get_user_model
 from django.forms import ValidationError
 import re
@@ -54,3 +54,11 @@ class TeacherForm(forms.ModelForm):
         model = Teacher
         fields = ('name', 'totalHours', 'id',)
         widgets = {'id': forms.HiddenInput()}
+
+class ConstraintForm(forms.Form):
+    teacher = forms.CharField()
+    period = forms.CharField()
+    module = forms.CharField()
+    required = forms.BooleanField()
+    class Meta:
+        fields = ('teacher', 'module', 'required')

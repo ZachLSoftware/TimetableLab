@@ -27,4 +27,8 @@ class Module(models.Model):
     year = models.IntegerField()
     period = models.CharField(max_length=20)
 
-
+class Constraint(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    module = models.ForeignKey(Module, on_delete=models.CASCADE)
+    required = models.BooleanField()

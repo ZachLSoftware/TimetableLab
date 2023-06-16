@@ -65,6 +65,36 @@ def addTeacher(request, id=None):
         return redirect('teachers')
     return render(request, 'addTeacher.html',{'form': form})
 
+def setConstraints(request, year):
+    ConstraintForm.base_fields['teacher'] = forms.ModelChoiceField(queryset=Teacher.objects.filter(user=request.user).values_list('name', flat=True))
+    ConstraintForm.base_fields['module'] = forms.ModelChoiceField(queryset=Module.objects.filter(year=year).values_list('name', flat=True))
+    constraintFormSet = formset_factory(ConstraintForm)
+    form=constraintFormSet
+    return render(request, 'setConstraints.html',{'form': form})
+
+@login_required
+def timetables(request):
+    context={}
+    rawYears=Module.objects.filter(user=request.user).values_list('year', flat=True).distinct()
+    years=[]
+    #for year in rawYears:
+        #years.append(year[0])
+    context['years']=rawYears
+    return render(request, "timetables.html", context)
+
+def addTeacher(request, id=None):
+    try:
+        teacher = Teacher.objects.get(id=id)
+    except Teacher.DoesNotExist:
+        teacher = None
+    form = TeacherForm(request.POST or None, instance=teacher)
+    if form.is_valid():
+        new_teacher=form.save(commit=False)
+        new_teacher.user=request.user
+        new_teacher.save()
+        return redirect('teachers')
+    return render(request, 'addTeacher.html',{'form': form})
+
 
 
 def setAvailability(request, teacherid):
@@ -132,7 +162,7 @@ def setModules(request, year=None):
                      'mon-3', 'tues-3', 'wed-3', 'thurs-3', 'fri-3',
                      'mon-4', 'tues-4', 'wed-4', 'thurs-4', 'fri-4',
                      'mon-5', 'tues-5', 'wed-5', 'thurs-5', 'fri-5']
-    moduleFormSet = formset_factory(ModuleForm)
+    
     if request.method=='POST':
         moduleSet = moduleFormSet(request.POST)
         if moduleSet.is_valid():
